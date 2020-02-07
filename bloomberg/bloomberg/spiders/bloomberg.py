@@ -8,7 +8,7 @@ Created on Mon Jan  6 19:25:50 2020
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.selector import HtmlXPathSelector
-from bbcsnews.items import BloombergArticle
+from bloomberg.items import BloombergArticle
 
 class BloombergSpider(CrawlSpider):
     '''
@@ -31,10 +31,11 @@ class BloombergSpider(CrawlSpider):
         Bloomberg= BloombergArticle()
         Bloomberg['title'] = hxs.select("//*[contains(concat( " ", @class, " " ), concat( " ", "lede-text-v2__hed", " " ))]").extract()
         Bloomberg['url'] = response.request.url
+        Bloomberg['summary'] = hxs.select("//*[contains(concat( " ", @class, " " ), concat( " ", "abstract-v2__item-text", " " ))]").extract()
         Bloomberg['body'] = hxs.select("//p").extract()
         Bloomberg['authors'] = hxs.select("//*[contains(concat( " ", @class, " " ), concat( " ", "author-v2__byline", " " ))]").extract()
         Bloomberg['timestamp'] = hxs.select("//*[contains(concat( " ", @class, " " ), concat( " ", "article-timestamp", " " ))]").extract()
-        yield BBCArticle
+        yield Bloomberg
     def process_request(self, request):
         self.inner_count = self.inner_count+1
         if self.inner_count < self.limit:
