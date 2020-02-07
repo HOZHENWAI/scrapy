@@ -13,11 +13,6 @@ class BbcnewsArticle(Item):
     # name = scrapy.Field()
     title = Field()
     body = Field()
-    topic_main = Field()
-    topic_similar = Field()
+    topics = Field()
     subtitles = Field()
-    date = Field()
-    region = Field()
     url = Field()
-    author = Field()
-    

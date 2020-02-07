@@ -17,17 +17,12 @@ class BBCSpider(CrawlSpider):
     name = 'BBCSpider' # Crawler Nale
     allowed_domains = ['bbc.com/news'] # Allowed domain
     start_urls = "https://bbc.com/news/"
-    def __init__(self, region = None, category = None,  count_max = 1000, time_max = None, *args, **kwargs):
-        count = 0
-
-        #define the starting_urls
-
-
-    def start:
+    limit = 1000
+    inner_count = 0
     rules = (
         #Extract links matching '' (but not matching '')
         #and follow kinks from them (since no callback means follow=True by default)
-
+        Rule(callback = parse_item, process_request = process_request, follow=True)
         #Extract links matching '' and parse them with the spider's method parse_item
 
     )
@@ -35,4 +30,14 @@ class BBCSpider(CrawlSpider):
         hxs = HtmlXPathSelector(response)
         BBCArticle = BbcnewsArticle()
         BBCArticle['title'] = hxs.select("//*[contains(concat( " ", @class, " " ), concat( " ", "story-body__h1", " " ))]").extract()
-        BBCArticle['url'] = hxs.select().extract()
+        BBCArticle['url'] = response.request.url
+        BBCArticle['body'] = hxs.select(//p).extract()
+        BBCArticle['topics'] = hxs.select(//*[contains(concat( " ", @class, " " ), concat( " ", "tags-list__tags", " " ))]).extract()
+        BBCArticle['subtitles'] = hxs.select(//*[contains(concat( " ", @class, " " ), concat( " ", "story-body__crosshead", " " ))]).extract()
+        yield BBCArticle
+    def process_request(self, request):
+        self.inner_count = self.inner_count+1
+        if self.inner_count < self.limit:
+            return request
+        else:
+            print('Limit reached.')
