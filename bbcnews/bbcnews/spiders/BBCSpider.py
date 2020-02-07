@@ -31,9 +31,9 @@ class BBCSpider(CrawlSpider):
         BBCArticle = BbcnewsArticle()
         BBCArticle['title'] = hxs.select("//*[contains(concat( " ", @class, " " ), concat( " ", "story-body__h1", " " ))]").extract()
         BBCArticle['url'] = response.request.url
-        BBCArticle['body'] = hxs.select(//p).extract()
-        BBCArticle['topics'] = hxs.select(//*[contains(concat( " ", @class, " " ), concat( " ", "tags-list__tags", " " ))]).extract()
-        BBCArticle['subtitles'] = hxs.select(//*[contains(concat( " ", @class, " " ), concat( " ", "story-body__crosshead", " " ))]).extract()
+        BBCArticle['body'] = hxs.select("//p").extract()
+        BBCArticle['topics'] = hxs.select("//*[contains(concat( " ", @class, " " ), concat( " ", "tags-list__tags", " " ))]").extract()
+        BBCArticle['subtitles'] = hxs.select("//*[contains(concat( " ", @class, " " ), concat( " ", "story-body__crosshead", " " ))]").extract()
         yield BBCArticle
     def process_request(self, request):
         self.inner_count = self.inner_count+1
